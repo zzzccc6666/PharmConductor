@@ -1,0 +1,95 @@
+{
+  "report_title": "PharmOrchestra 能力验证报告",
+  "generated_at": "2026-08-02T17:29:14.201746",
+  "capabilities": {
+    "1_multi_disease": {
+      "description": "5种疾病端到端验证",
+      "results": [
+        {
+          "disease": "糖尿病",
+          "success": true,
+          "papers": 5,
+          "targets": 5,
+          "safe_molecules": 13,
+          "best_docking": 0.946,
+          "messages": 8,
+          "logs": 55,
+          "top_molecule": "IRS-1调节剂-A",
+          "top_score": 0.9094
+        },
+        {
+          "disease": "乳腺癌",
+          "success": true,
+          "papers": 5,
+          "targets": 5,
+          "safe_molecules": 7,
+          "best_docking": 0.865,
+          "messages": 8,
+          "logs": 55,
+          "top_molecule": "ERα调节剂-B",
+          "top_score": 0.883
+        },
+        {
+          "disease": "高血压",
+          "success": true,
+          "papers": 4,
+          "targets": 4,
+          "safe_molecules": 5,
+          "best_docking": 0.926,
+          "messages": 8,
+          "logs": 51,
+          "top_molecule": "AT1R拮抗剂-B",
+          "top_score": 0.8984
+        },
+        {
+          "disease": "类风湿关节炎",
+          "success": true,
+          "papers": 4,
+          "targets": 4,
+          "safe_molecules": 8,
+          "best_docking": 0.942,
+          "messages": 8,
+          "logs": 53,
+          "top_molecule": "CD20_通用分子_1",
+          "top_score": 0.8958
+        },
+        {
+          "disease": "阿尔茨海默病",
+          "success": true,
+          "papers": 5,
+          "targets": 5,
+          "safe_molecules": 7,
+          "best_docking": 0.852,
+          "messages": 8,
+          "logs": 55,
+          "top_molecule": "NLRP3_通用分子_2",
+          "top_score": 0.7832
+        }
+      ],
+      "all_passed": true
+    },
+    "2_message_trace": {
+      "description": "消息总线可追溯性",
+      "trace_id": "19698f06",
+      "message_count": 8
+    },
+    "3_log_tracing": {
+      "description": "全链路日志追踪",
+      "total_logs": 55,
+      "trace_id": "bd92455a"
+    },
+    "4_quality_gate": {
+      "description": "质量门控机制",
+      "gates_configured": 4
+    },
+    "5_scoring_formula": {
+      "description": "综合评分公式",
+      "top_molecule": "IRS-1调节剂-A",
+      "top_score": 0.9094
+    },
+    "6_determinism": {
+      "description": "确定性输出验证",
+      "deterministic": true
+    }
+  }
+}
