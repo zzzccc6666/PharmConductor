@@ -1,0 +1,36 @@
+# 第三方依赖与知识产权声明（NOTICE）
+
+本项目 PharmOrchestra / PharmConductor 由 罗啸（GitHub: zzzccc6666）原创开发，以 MIT License 发布（见根目录 `LICENSE`）。
+本文件按开源合规惯例列出全部第三方组件及其协议，供评审与使用者核查。
+
+## 一、运行时依赖
+
+**无第三方运行时依赖。** 项目核心流程仅使用 Python 标准库（dataclasses / typing / json / os / sys / time / uuid / hashlib / random / datetime），不引入任何第三方包即可运行。
+
+## 二、开发 / 测试依赖
+
+| 组件 | 版本 | 协议 | 用途 | 协议文本 |
+|------|------|------|------|----------|
+| pytest | >=7.0.0 | MIT | 单元测试与集成测试（仅开发期，不随产品分发） | https://github.com/pytest-dev/pytest/blob/main/LICENSE |
+
+## 三、基础运行环境
+
+| 组件 | 协议 | 说明 |
+|------|------|------|
+| Python 3.8+ | PSF-2.0（Python Software Foundation License， permissive） | 解释器运行时，非分发组件 |
+| python:3.11-slim（Docker 基础镜像，可选） | 镜像内 Python 为 PSF-2.0，Debian 基础层各组件见其自带许可 | 仅用于容器化部署，非必须 |
+
+以上协议均为宽松型（permissive）开源协议，与本项目 MIT License 完全兼容，无 copyleft 传染性风险，无专利授权冲突。
+
+## 四、数据与内容声明
+
+- **演示数据**：仓库内所有演示输出（如 `results_糖尿病_*.json`）与内置 mock 数据均为项目自行构造的**模拟数据**，用于离线演示与教学，不来自任何真实患者、真实临床试验或受版权保护的第三方数据库。
+- **命名引用**：README 与代码注释中提及的 PubMed、ADMET 等仅为领域概念与公共名词引用，本项目未抓取、复制或再分发上述来源的任何数据内容。
+- **商标**：PubMed 为美国国立医学图书馆相关标识，Python 为 PSF 注册商标；本项目提及仅为事实性描述，不主张任何权利。
+
+## 五、免责说明
+
+本项目是面向药物研发流程编排的多智能体（Multi-Agent）技术演示与教学项目，输出结果为模拟数据生成的示例，**不构成任何医学建议、药物推荐或临床决策依据**。
+
+---
+最后更新：2026-09-22

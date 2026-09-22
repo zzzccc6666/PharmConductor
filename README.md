@@ -1,26 +1,26 @@
-# PharmOrchestra - 多智能体药物发现平台
+# PharmOrchestra — 多智能体药物研发流程编排系统
 
-## 项目简介（大白话版）
+> 输入一个疾病名称，4 个专业 Agent 自动完成「文献侦察 → 分子筛选 → 机制分析 → 安全评估」全流程，输出 TOP 10 安全候选分子。
+> 完全离线可跑、零第三方依赖、中文注释、确定性输出——评委克隆后 1 分钟即可复现。
 
-PharmOrchestra（药学交响乐团）是一个用Python写的"虚拟药物研发团队"。
-
-想象一下，你要研发一种治疗糖尿病的新药，传统流程需要很多人协作：
-- 有人负责查文献找靶点
-- 有人负责筛选分子
-- 有人负责分析药物怎么起作用
-- 有人负责检查药物安不安全
-
-PharmOrchestra就是把这四个"人"变成四个AI智能体（Agent），让它们自动完成这些工作。
-
-**特点：**
-- 完全离线运行，不需要任何API密钥（用mock数据模拟）
-- 代码通俗易懂，适合药学新生学习
-- 所有注释都是中文
-- 输入一个疾病名字，输出安全的候选药物分子
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Python](https://img.shields.io/badge/Python-3.8%2B-blue.svg)](https://www.python.org/)
 
 ---
 
-## 架构图
+## 一、项目简介
+
+PharmOrchestra（PharmConductor，药学交响乐团）是一个用 Python 实现的「虚拟药物研发团队」：把药物早期发现中四个关键角色变成四个 AI 智能体（Agent），由编排器统一调度，自动完成从疾病到候选分子的完整链路。
+
+- **4-Agent 编排架构**：1 个 Manager（编排器）+ 4 个 Worker（文献侦察兵 / 分子筛选手 / 机制分析师 / 安全评估官），经消息总线（MatrixBus）协作；
+- **质量门控（Quality Gate）**：每个环节有最低质量标准，不达标自动重试，保证管线输出可信；
+- **完全离线、零依赖**：核心流程只用 Python 标准库，mock 数据由哈希确定性生成——相同输入永远得到相同输出，演示与评审完全可复现；
+- **7 个技能（Skill）**：文献检索、靶点提取、分子筛选、结合位点预测、对接打分、毒性预测、ADMET 分析；
+- **全中文注释**：代码即教材，药学背景也能逐行读懂。
+
+> ⚠️ 本项目为技术演示与教学项目，输出为模拟数据，不构成任何医学建议。
+
+## 二、架构示意
 
 ```
                     +-----------------------+
@@ -47,219 +47,89 @@ PharmOrchestra就是把这四个"人"变成四个AI智能体（Agent），让它
   消息总线:      MatrixBus (内存消息传递)
 ```
 
-### 流程说明
+**流程**：输入疾病名称 → Scout 查文献提靶点（质检：靶点 ≥3）→ Screener 筛候选分子（质检：分子 ≥5）→ Mechanism 分析结合机制并打分（质检：最高分 ≥0.8）→ Safety 评估毒性与 ADMET（质检：安全分子 ≥5）→ 输出 TOP 10 安全候选分子。
 
-```
-输入: 疾病名称 (如 "糖尿病")
-  |
-  v
-[1. Scout 文献侦察兵]
-  - 用 pubmed_search 搜论文
-  - 用 target_extract 提取靶点
-  - 质量检查: 靶点数 >= 3
-  |
-  v
-[2. Screener 分子筛选手]
-  - 用 mol_screening 搜候选分子
-  - 质量检查: 分子数 >= 5
-  |
-  v
-[3. Mechanism 机制分析师]
-  - 用 binding_site 预测结合位点
-  - 用 docking_score 计算对接分数
-  - 质量检查: 最高分 >= 0.8
-  |
-  v
-[4. Safety 安全评估官]
-  - 用 tox_predict 预测毒性
-  - 用 admet_analysis 计算ADMET参数
-  - 质量检查: 安全分子数 >= 5
-  |
-  v
-输出: TOP 10 安全候选分子 (含综合评分)
-```
+## 三、快速开始
 
----
-
-## 快速开始
-
-### 环境要求
-
-- Python 3.8 或更高版本
-- 不需要安装任何额外的库（标准库即可运行）
-- 运行测试需要 pytest（可选）
-
-### 运行演示
+**环境要求**：Python 3.8+，无需安装任何第三方库（运行测试需 `pip install pytest`）。
 
 ```bash
-# 进入项目目录
-cd PharmOrchestra
+git clone https://github.com/zzzccc6666/PharmOrchestra-Agent-.git
+cd PharmOrchestra-Agent-/PharmOrchestra-github
 
-# 运行（默认疾病: 糖尿病）
+# 运行（默认疾病：糖尿病）
 python main.py
 
-# 指定疾病
-python main.py 糖尿病
+# 指定疾病（内置 5 种 mock 数据：糖尿病 / 乳腺癌 / 高血压 / 类风湿关节炎 / 阿尔茨海默病）
 python main.py 乳腺癌
-python main.py 高血压
-python main.py 类风湿关节炎
-python main.py 阿尔茨海默病
 ```
 
-### 运行测试
+**运行测试**：
 
 ```bash
-# 安装pytest（如果没有的话）
-pip install pytest
-
-# 运行所有测试
 python -m pytest tests/ -v
-
-# 运行单个测试类
-python -m pytest tests/test_skills.py::TestPubMedSearch -v
 ```
 
----
-
-## 项目结构说明
-
-```
-PharmOrchestra/
-├── README.md                  # 项目说明文档（就是你在看的这个）
-├── requirements.txt           # Python依赖列表
-├── Dockerfile                 # Docker容器配置
-├── main.py                    # 演示入口，运行这个开始
-│
-├── agents/                    # 智能体模块
-│   ├── __init__.py
-│   ├── base_agent.py          # Agent基类（消息传递、质量检查）
-│   ├── manager.py             # 编排器（协调4个Worker）
-│   ├── scout.py               # 文献侦察兵（找靶点）
-│   ├── screener.py            # 分子筛选手（找分子）
-│   ├── mechanism.py           # 机制分析师（分析结合机制）
-│   └── safety.py              # 安全评估官（评估毒性）
-│
-├── skills/                    # 技能模块
-│   ├── __init__.py
-│   ├── base_skill.py          # 技能基类
-│   ├── pubmed_search.py       # PubMed文献检索
-│   ├── target_extract.py      # 靶点提取
-│   ├── mol_screening.py       # 分子筛选
-│   ├── docking_score.py       # 分子对接打分
-│   ├── binding_site.py        # 结合位点预测
-│   ├── tox_predict.py         # 毒性预测
-│   └── admet_analysis.py      # ADMET参数分析
-│
-├── utils/                     # 工具模块
-│   ├── __init__.py
-│   ├── matrix.py              # 消息总线（模拟Matrix协议）
-│   └── trace.py               # 日志记录器
-│
-└── tests/                     # 测试模块
-    ├── __init__.py
-    └── test_skills.py         # 7个技能的单元测试
-```
-
----
-
-## Agent（智能体）说明
-
-### Manager（编排器）
-- **角色**：项目经理，负责按顺序分配任务给4个Worker
-- **流程**：Scout -> Screener -> Mechanism -> Safety
-- **特点**：每一步之间传递数据，汇总最终结果
-
-### Scout（文献侦察兵）
-- **角色**：去"图书馆"查资料，从科研文献中发现药物靶点
-- **技能**：pubmed_search（搜论文）+ target_extract（提取靶点）
-- **质量检查**：至少找到3个靶点
-
-### Screener（分子筛选手）
-- **角色**：根据靶点去"分子库"找能结合的候选分子
-- **技能**：mol_screening（分子筛选）
-- **质量检查**：至少找到5个候选分子
-
-### Mechanism（机制分析师）
-- **角色**：分析分子怎么跟靶点结合，结合得好不好
-- **技能**：binding_site（找结合位点）+ docking_score（打分）
-- **质量检查**：最高对接分数 >= 0.8
-
-### Safety（安全评估官）
-- **角色**：检查分子有没有毒，在人体里表现怎么样
-- **技能**：tox_predict（毒性预测）+ admet_analysis（ADMET分析）
-- **质量检查**：至少5个安全分子
-
----
-
-## Skill（技能）说明
-
-| 技能名 | 大白话解释 | 输入 | 输出 |
-|--------|-----------|------|------|
-| pubmed_search | 在PubMed上搜论文 | 疾病名 | 论文列表 |
-| target_extract | 从论文里读出靶点 | 论文列表 | 靶点列表 |
-| mol_screening | 去分子库找候选分子 | 靶点列表 | 分子列表(SMILES) |
-| docking_score | 算分子跟靶点结合得多好 | 分子+靶点 | 对接分数(0-1) |
-| binding_site | 找靶点上分子能卡进去的口袋 | 靶点名 | 结合位点信息 |
-| tox_predict | 预测分子有没有毒 | 分子列表 | 毒性等级(低/中/高) |
-| admet_analysis | 算药物在人体里的表现 | 分子列表 | ADMET参数 |
-
-### ADMET是什么？
-
-ADMET是五个英文单词的缩写，描述药物在人体内的"旅程"：
-- **A**bsorption（吸收）：药物能不能被身体吸收
-- **D**istribution（分布）：药物在身体里怎么分布
-- **M**etabolism（代谢）：药物怎么被分解
-- **E**xcretion（排泄）：药物怎么排出体外
-- **T**oxicity（毒性）：药物有没有毒
-
----
-
-## 支持的疾病
-
-目前内置了5种疾病的mock数据：
-
-| 疾病 | 中文 | 主要靶点 |
-|------|------|---------|
-| 糖尿病 | diabetes | GLUT4, IRS-1, AMPK, GLP-1R, PPAR-γ |
-| 乳腺癌 | breast cancer | ERα, HER2, CDK4/6, PI3K, BRCA1 |
-| 高血压 | hypertension | ACE, AT1R, ACE2 |
-| 类风湿关节炎 | rheumatoid arthritis | TNF-α, IL-6, JAK |
-| 阿尔茨海默病 | Alzheimer's | AChE, BACE1, Tau |
-
----
-
-## 技术特点
-
-1. **消息总线（MatrixBus）**：模拟Matrix协议，Agent之间通过消息队列通信
-2. **质量门控（Quality Gate）**：每个Agent都有质量检查，不达标会自动重试一次
-3. **追踪日志（TraceLogger）**：记录每一步操作，方便调试和审计
-4. **完全离线**：所有外部API调用都有mock实现，不需要网络和密钥
-5. **确定性结果**：使用哈希函数生成mock数据，保证相同输入得到相同输出
-
----
-
-## Docker运行
+**Docker（可选）**：
 
 ```bash
-# 构建镜像
 docker build -t pharmorchestra .
-
-# 运行容器
 docker run pharmorchestra python main.py 糖尿病
 ```
 
----
+## 四、使用示例
 
-## 给药学新生的学习建议
+执行 `python main.py 糖尿病`，终端实时输出 55 条编排事件（确定性输出，节选）：
 
-1. 先看 `main.py`，了解整个流程怎么跑的
-2. 再看 `agents/manager.py`，理解4个Agent怎么协作
-3. 然后看各个Worker Agent（scout/screener/mechanism/safety），理解每个Agent做什么
-4. 最后看 `skills/` 目录里的技能，理解每个技能的具体实现
-5. `utils/` 目录是工具类，消息总线和日志记录器，可以最后看
+```
+>>> 分配任务给 Scout（文献侦察兵）
+Scout:    检索到相关文献，提取靶点 5 个，质量评分=1.00
+>>> 分配任务给 Screener（分子筛选手）
+Screener: 筛选出 17 个候选分子，质量评分=1.00
+>>> 分配任务给 Mechanism（机制分析师）
+Mechanism: 分析了 17 个分子，最高对接分数=0.9460，平均=0.7596
+>>> 分配任务给 Safety（安全评估官）
+Safety:   毒性分布 {'low': 13, 'medium': 3, 'high': 1}，筛出 13 个安全候选分子
+===== 药物发现流程完成 ===== 找到 13 个安全候选分子
+```
 
-**重点理解概念：**
-- **Agent**：就是AI团队的"成员"，每个成员有特定的职责
-- **Skill**：就是Agent能做的"具体技能"，比如搜文献、算分数
-- **消息总线**：就是Agent之间的"通信系统"，类似微信群
-- **质量门控**：就是"及格线"，每个环节都有最低要求
+结果同时落盘为 `results_<疾病>_<时间戳>.json`（含 trace_id、各阶段摘要、安全分子清单与评分），可直接作为评审核查材料。
+
+另有能力展示脚本（面向评审的 6 大核心能力验证）：
+
+```bash
+python demo_capabilities.py
+```
+
+## 五、演示视频与线上 Demo
+
+- **演示视频（约 3 分钟，推荐）**：[PharmConductor 演示视频](https://larkcommunity.feishu.cn/file/WgMLbGFT6oQbgyxqEITcJoeYn6f) —— 覆盖一键离线运行（55 事件确定性输出）、Safety 毒性否决闭环（红占比 40% → 自动重规划 → 0 红）、ChEMBL + GLM 真实数据回测（西地那非 #5，与临床事实一致）。
+- **实时可视化版（PharmConductor Web Demo）**：https://dcniaqwtmoca.feishuapp.com/app/app_17d67yfvzcc （需飞书账号登录）
+  多 Agent 协作实时可视化：启动任务 → 事件流 → Safety 红牌否决 → 自动 replan → 报告生成，全过程网页可见。
+
+## 六、项目结构
+
+```
+PharmOrchestra-github/
+├── main.py                # 演示入口
+├── demo_capabilities.py   # 能力展示脚本（面向评审）
+├── agents/                # 5 个智能体（manager + 4 个 worker）
+├── skills/                # 7 个技能（检索/筛选/对接/毒性/ADMET 等）
+├── utils/                 # 消息总线 MatrixBus + 追踪日志 TraceLogger
+├── tests/                 # 单元测试与集成测试
+├── requirements.txt       # 依赖清单（核心零依赖，仅测试用 pytest）
+└── Dockerfile             # 容器化（可选）
+```
+
+## 七、参与贡献
+
+欢迎贡献！请先阅读 [CONTRIBUTING.md](CONTRIBUTING.md)（分支命名、代码约定、本地验证、提交格式），提 Issue / PR 请使用仓库内置模板。新手推荐从「新增疾病 mock 数据」或「文档改进」入手。
+
+## 八、第三方依赖与知识产权
+
+- 运行时**零第三方依赖**（仅 Python 标准库）；测试依赖 pytest（MIT，仅开发期）。
+- 完整清单与协议核查见 [NOTICE](NOTICE)；所有演示数据为自行构造的模拟数据，不含第三方受版权保护内容。
+
+## 九、许可证
+
+本项目以 [MIT License](LICENSE) 开源。Copyright (c) 2026 罗啸 (zzzccc6666)。

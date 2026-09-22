@@ -1,0 +1,33 @@
+# Python 字节码与缓存
+__pycache__/
+*.py[cod]
+*$py.class
+
+# 虚拟环境
+.venv/
+venv/
+env/
+
+# 打包与构建产物
+build/
+dist/
+*.egg-info/
+
+# 测试与覆盖率
+.pytest_cache/
+.coverage
+htmlcov/
+
+# 运行时产物（演示输出）
+results_*.json
+
+# 密钥与本地配置（绝不入库）
+.env
+*.secrets.env
+.secrets.env
+
+# IDE / 系统文件
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
