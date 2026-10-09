@@ -10,7 +10,7 @@
 
 ## 一、项目简介
 
-PharmOrchestra（PharmConductor，药学交响乐团）是一个用 Python 实现的「虚拟药物研发团队」：把药物早期发现中四个关键角色变成四个 AI 智能体（Agent），由编排器统一调度，自动完成从疾病到候选分子的完整链路。
+PharmConductor（药智·多智能体药物研发流程编排系统）是一个用 Python 实现的「虚拟药物研发团队」：把药物早期发现中四个关键角色变成四个 AI 智能体（Agent），由编排器统一调度，自动完成从疾病到候选分子的完整链路。
 
 - **4-Agent 编排架构**：1 个 Manager（编排器）+ 4 个 Worker（文献侦察兵 / 分子筛选手 / 机制分析师 / 安全评估官），经消息总线（MatrixBus）协作；
 - **质量门控（Quality Gate）**：每个环节有最低质量标准，不达标自动重试，保证管线输出可信；
@@ -54,8 +54,8 @@ PharmOrchestra（PharmConductor，药学交响乐团）是一个用 Python 实�
 **环境要求**：Python 3.8+，无需安装任何第三方库（运行测试需 `pip install pytest`）。
 
 ```bash
-git clone https://github.com/zzzccc6666/PharmOrchestra-Agent-.git
-cd PharmOrchestra-Agent-/PharmOrchestra-github
+git clone https://github.com/zzzccc6666/PharmConductor.git
+cd PharmConductor/PharmOrchestra-github
 
 # 运行（默认疾病：糖尿病）
 python main.py
