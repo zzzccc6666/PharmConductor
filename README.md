@@ -103,7 +103,7 @@ python demo_capabilities.py
 
 ## 五、演示视频与线上 Demo
 
-- **演示视频（约 3 分钟，推荐）**：[PharmConductor 演示视频](https://larkcommunity.feishu.cn/file/WgMLbGFT6oQbgyxqEITcJoeYn6f) —— 覆盖一键离线运行（55 事件确定性输出）、Safety 毒性否决闭环（红占比 40% → 自动重规划 → 0 红）、ChEMBL + GLM 真实数据回测（西地那非 #5，与临床事实一致）。
+- **演示视频（约 3 分钟，推荐）**：[PharmConductor 演示视频](https://github.com/user-attachments/assets/855a1c7a-6dbd-45d8-adf1-69a7ae79a9b1) —— 覆盖一键离线运行（55 事件确定性输出）、Safety 毒性否决闭环（红占比 40% → 自动重规划 → 0 红）、ChEMBL + GLM 真实数据回测（西地那非 #5，与临床事实一致）。
 - **实时可视化版（PharmConductor Web Demo）**：https://dcniaqwtmoca.feishuapp.com/app/app_17d67yfvzcc （需飞书账号登录）
   多 Agent 协作实时可视化：启动任务 → 事件流 → Safety 红牌否决 → 自动 replan → 报告生成，全过程网页可见。
 
